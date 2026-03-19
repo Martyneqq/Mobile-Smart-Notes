@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.secrets)
 }
 
 android {
@@ -33,21 +34,21 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     
-    // Tady jsme odstranili problematický kotlinOptions blok
-    
+    // Moderní způsob nastavení JVM targetu
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
+    }
+
     buildFeatures {
         compose = true
-    }
-}
-
-// Nastavení jvmTarget pro všechny Kotlin tasky moderním způsobem
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        buildConfig = true
     }
 }
 
 dependencies {
+    // Opravené tečky místo pomlček
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
