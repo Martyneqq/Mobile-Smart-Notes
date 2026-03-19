@@ -13,15 +13,14 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val noteDao = db.noteDao()
     val allNotes: Flow<List<Note>> = noteDao.getAllNotes()
 
-    // Gemini AI Model
+    // Gemini AI Model - API Key is now safely hidden in BuildConfig
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
-        apiKey = "AIzaSyDXqB03prX0XYvL_Wioj3WaDZ_9R2nPO_o"
+        apiKey = BuildConfig.GEMINI_API_KEY
     )
 
     fun addNote(title: String, content: String) {
         viewModelScope.launch {
-            // Predběžné uložení s "Analyzing..." stavem
             val (mood, tags) = analyzeNote(content)
             val note = Note(
                 title = title,
